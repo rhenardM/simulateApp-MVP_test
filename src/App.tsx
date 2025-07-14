@@ -1,5 +1,5 @@
-import ReservationForm from './components/form/ReservationForm.js'
-import Map from './components/Map.js';
+import ReservationForm from './components/form/ReservationForm'
+import Map from './components/Map';
 import { useState } from 'react';
 
 interface DonneesReservation {
