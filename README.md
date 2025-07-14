@@ -30,7 +30,7 @@ Toutes les données sont simulées côté client
 
 🚀 Lancer le projet localement
 
-git clone [.......]
+git clone https://github.com/rhenardM/simulateApp-MVP_test.git
 cd reservation-app
 npm install
 npm run dev
