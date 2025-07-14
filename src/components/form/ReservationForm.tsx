@@ -1,7 +1,23 @@
 import { useState } from 'react';
-import { User, Phone, MapPin, Flag } from 'lucide-react'; // Optionnel pour icônes
+import type { ChangeEvent, FormEvent } from 'react';
+import { User, Phone, MapPin, Flag } from 'lucide-react';
 
-export default function ReservationForm({ onSubmit, municipalities }) {
+interface Municipality {
+  name: string;
+  value: string;
+}
+
+interface ReservationFormProps {
+  onSubmit: (data: {
+    name: string;
+    phone: string;
+    departure: string;
+    destination: string;
+  }) => void;
+  municipalities: Municipality[];
+}
+
+export default function ReservationForm({ onSubmit, municipalities }: ReservationFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -9,12 +25,12 @@ export default function ReservationForm({ onSubmit, municipalities }) {
     destination: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit(formData);
   };
@@ -22,7 +38,6 @@ export default function ReservationForm({ onSubmit, municipalities }) {
   return (
     <div className="bg-white rounded-xl shadow-md p-6 md:p-8 w-full max-w-md mx-auto form-container transition duration-300 hover:translate-y-[-2px] hover:shadow-xl">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Réservation de Trajet</h2>
-      
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Nom */}
         <div className="space-y-1">
@@ -41,7 +56,6 @@ export default function ReservationForm({ onSubmit, municipalities }) {
             />
           </div>
         </div>
-
         {/* Téléphone */}
         <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">Téléphone</label>
@@ -59,7 +73,6 @@ export default function ReservationForm({ onSubmit, municipalities }) {
             />
           </div>
         </div>
-
         {/* Départ */}
         <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">Point de départ</label>
@@ -74,7 +87,7 @@ export default function ReservationForm({ onSubmit, municipalities }) {
               onChange={handleChange}
             >
               <option value="">Sélectionnez un départ</option>
-              {municipalities.map((municipality) => (
+              {municipalities.map((municipality: Municipality) => (
                 <option key={municipality.value} value={municipality.value}>
                   {municipality.name}
                 </option>
@@ -82,7 +95,6 @@ export default function ReservationForm({ onSubmit, municipalities }) {
             </select>
           </div>
         </div>
-
         {/* Destination */}
         <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">Destination</label>
@@ -97,7 +109,7 @@ export default function ReservationForm({ onSubmit, municipalities }) {
               onChange={handleChange}
             >
               <option value="">Sélectionnez une destination</option>
-              {municipalities.map((municipality) => (
+              {municipalities.map((municipality: Municipality) => (
                 <option key={municipality.value} value={municipality.value}>
                   {municipality.name}
                 </option>
@@ -105,7 +117,6 @@ export default function ReservationForm({ onSubmit, municipalities }) {
             </select>
           </div>
         </div>
-
         {/* Bouton */}
         <div className="pt-2">
           <button

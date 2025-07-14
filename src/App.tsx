@@ -1,14 +1,20 @@
-import ReservationForm from './components/form/ReservationForm'
+import ReservationForm from './components/form/ReservationForm';
 import Map from './components/Map';
 import { useState } from 'react';
 
 interface DonneesReservation {
   name: string;
+  phone?: string; 
   departure: string;
   destination: string;
 }
 
-const validMunicipalities = [
+interface Municipality {
+  name: string;
+  value: string;
+}
+
+const validMunicipalities: Municipality[] = [
   { name: 'Gombe', value: 'Gombe' },
   { name: 'Barumbu', value: 'Barumbu' },
   { name: 'Kasa-Vubu', value: 'Kasa-Vubu' },
@@ -31,9 +37,9 @@ const validMunicipalities = [
   { name: 'Nsele', value: 'Nsele' },
 ];
 
-type Municipality = string;
+type MunicipalityValue = Municipality['value'];
 
-const MunicipalityCoords: Record<Municipality, number[]> = {
+const MunicipalityCoords: Record<MunicipalityValue, [number, number]> = {
   Gombe: [-4.325, 15.313],
   Barumbu: [-4.320, 15.310],
   'Kasa-Vubu': [-4.350, 15.300],
@@ -57,10 +63,14 @@ const MunicipalityCoords: Record<Municipality, number[]> = {
 };
 
 function App() {
-  const [coords, setCoords] = useState<{ start: number[] | null; end: number[] | null }>({ start: null, end: null });
+  const [coords, setCoords] = useState<{ start: [number, number] | null; end: [number, number] | null }>({
+    start: null,
+    end: null,
+  });
+
   const handleReservation = (data: DonneesReservation) => {
-    const start = MunicipalityCoords[data.departure as Municipality] || MunicipalityCoords.Gombe;
-    const end = MunicipalityCoords[data.destination as Municipality] || MunicipalityCoords['Kasa-Vubu'];
+    const start = MunicipalityCoords[data.departure as MunicipalityValue] || MunicipalityCoords.Gombe;
+    const end = MunicipalityCoords[data.destination as MunicipalityValue] || MunicipalityCoords['Kasa-Vubu'];
 
     setCoords({ start, end });
 
@@ -68,29 +78,29 @@ function App() {
     alert(`Réservation pour ${data.name} de ${data.departure} à ${data.destination}`);
   };
 
-return (
-  <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-6">
-    <h1 className="text-3xl font-bold text-center mb-16">Réservation de voiture</h1>
-    <ReservationForm onSubmit={handleReservation} municipalities={validMunicipalities} />
-    <div className="mt-8 w-full max-w-3xl">
-      <Map start={coords.start} end={coords.end} />
-      {coords.start && coords.end && (
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={() => {
-              setTimeout(() => {
-                alert('Un conducteur a été trouvé ! Il arrive dans 5 minutes.');
-              }, 1000);
-            }}
-            className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg shadow transition"
-          >
-            Chercher un conducteur
-          </button>
-        </div>
-      )}
+  return (
+    <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-6">
+      <h1 className="text-3xl font-bold text-center mb-16">Réservation de voiture</h1>
+      <ReservationForm onSubmit={handleReservation} municipalities={validMunicipalities} />
+      <div className="mt-8 w-full max-w-3xl">
+        <Map start={coords.start} end={coords.end} />
+        {coords.start && coords.end && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={() => {
+                setTimeout(() => {
+                  alert('Un conducteur a été trouvé ! Il arrive dans 5 minutes.');
+                }, 1000);
+              }}
+              className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg shadow transition"
+            >
+              Chercher un conducteur
+            </button>
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default App;
