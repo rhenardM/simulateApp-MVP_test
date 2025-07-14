@@ -33,5 +33,7 @@ Toutes les données sont simulées côté client
 git clone https://github.com/rhenardM/simulateApp-MVP_test.git
 
 cd reservation-app
+
 npm install
+
 npm run dev
