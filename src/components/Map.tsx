@@ -1,10 +1,9 @@
-// src/components/Map.jsx
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 // Fix icônes Leaflet manquantes
-delete L.Icon.Default.prototype._getIconUrl;
+delete (L.Icon.Default.prototype as { _getIconUrl?: () => void })._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -14,7 +13,12 @@ L.Icon.Default.mergeOptions({
     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-export default function Map({ start, end }) {
+interface MapProps {
+  start: [number, number] | null;
+  end: [number, number] | null;
+}
+
+export default function Map({ start, end }: MapProps) {
   if (!start || !end) return null;
 
   return (
@@ -25,7 +29,7 @@ export default function Map({ start, end }) {
       />
       <Marker position={start} />
       <Marker position={end} />
-      <Polyline positions={[start, end]} color="blue" />
+      <Polyline positions={[start, end]} pathOptions={{ color: "blue" }} />
     </MapContainer>
   );
 }
